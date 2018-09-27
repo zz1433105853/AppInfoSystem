@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+        
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url">
+			<value><![CDATA[jdbc:mysql://127.0.0.1:3306/smbms?userUnicode=true&characterEncoding=utf-8]]></value>
+		</property>
+		<property name="username" value="root"/>
+		<property name="password" value="root"/>	
+	</bean>
+	<!-- 配置SqlSessionFactoryBean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 引用数据源组件 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 引用MyBatis配置文件中的配置 -->
+		<property name="configLocation" value="classpath:mybatis-config1.xml"/>
+		<!-- 配置sql映射文件信息 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:cn/smbms/dao/**/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 配置SQLSessionTemplate -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	<!--配置DAO  -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	<!-- 	<property name="mapperInterface" value="cn.smbms.dao.user.UserMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/> -->
+		
+		<property name="basePackage" value="cn.smbms.dao"/>
+	</bean>
+	
+	<!-- 配置扫描注解定义的业务Bean -->
+	<context:component-scan base-package="cn.smbms.service"/>
+	<bean id="txManager"
+	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<tx:annotation-driven transaction-manager="txManager"/>
+	<!-- 通过<tx:advice> 标签为指定的事务管理器设置事务属性 -->
+	
+</beans>

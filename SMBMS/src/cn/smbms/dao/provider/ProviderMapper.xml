@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smbms.dao.provider.ProviderMapper">
+<!-- 查询供应商的记录数 -->
+	<select id="count" resultType="int">
+		select count(1) as count from smbms_provider
+	</select>
+<!-- 查询供应商的详细信息 -->
+	<select id="getAllPro" resultType="Provider">
+		select *  from smbms_provider	
+	</select>
+<!--  增加供应商-->
+	<insert id="addpro" parameterType="Provider">
+		insert into smbms_provider (proCode,proName,proDesc,proContact,proPhone,proAddress,proFax,createdBy,creationDate)
+		values (#{proCode},#{proName},#{proDesc},#{proContact},#{proPhone},#{proAddress},#{proFax},#{createdBy},#{creationDate})
+	</insert>	
+	
+<!-- 删除供应商 -->
+	<delete id="delpro" parameterType="int">
+	  delete from smbms_provider where id = #{id}	
+	</delete>	
+	
+<!-- 修改供应商信息 -->
+
+	<update id="uppro">
+		update smbms_provider
+			<trim prefix="set" suffixOverrides="," suffix="where id = #{id}">
+				<if test="proCode != null">proCode = #{proCode},</if>
+				<if test="proName != null">proName = #{proName},</if>
+				<if test="proDesc != null">proDesc = #{proDesc},</if>
+				<if test="proContact != null">proContact = #{proContact},</if>
+				<if test="proPhone != null">proPhone = #{proPhone},</if>
+				<if test="proAddress != null">proAddress = #{proAddress},</if>
+				<if test="proFax != null">proFax = #{proFax},</if>
+				<if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+				<if test="modifyDate != null">modifyDate = #{modifyDate},</if>		
+			</trim>
+	</update>
+<!-- 通过id查询供应商信息 -->
+	<select id="getProviderById" parameterType="int" resultType="Provider">
+		select *  from smbms_provider where id= #{id}
+	</select>
+	<!-- 通过供应商的编码和名字查询供应商 -->
+	<select id="getProviderList" resultType="Provider">
+		select *  from smbms_provider 
+			<trim prefix="where" prefixOverrides="and | or">
+				<if test="proCode !=null and proCode !=''">
+				 and proCode  like CONCAT ('%',#{proCode},'%') 
+				</if>
+				<if test="proName !=null and proName !=''">
+					and proName like CONCAT ('%',#{proName},'%') 
+				</if>			
+			</trim>
+	
+	</select>
+</mapper>

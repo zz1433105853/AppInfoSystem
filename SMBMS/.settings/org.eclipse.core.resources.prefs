@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//WebRoot/WEB-INF/jsp/user/userList.jsp=UTF-8
+encoding//WebRoot/login.jsp=UTF-8
+encoding//resources/database.properties=UTF-8
+encoding//src/cn/smbms=UTF-8
+encoding//src/cn/smbms/dao/user=UTF-8
+encoding//src/cn/smbms/dao/user/UserMapper.java=UTF-8
+encoding//src/cn/smbms/pojo/Address.java=UTF-8
+encoding//src/cn/smbms/tools/MyBatisUtil.java=UTF-8
+encoding/<project>=UTF-8
