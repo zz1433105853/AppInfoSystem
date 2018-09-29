@@ -1,0 +1,31 @@
+package cn.appsys.service.AppInfo;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.appsys.dao.AppInfo.AppInfoMapper;
+import cn.appsys.pojo.AppInfo;
+import cn.appsys.tools.PageSupport;
+
+@Service
+public class AppInfoServiceImpl implements AppInfoService{
+
+	@Resource
+	private AppInfoMapper appInfoMapper;
+
+	@Override
+	public List<AppInfo> getAppInfoByParam(AppInfo appInfo, PageSupport pages) {
+		List<AppInfo> appList = null;
+		try {
+			appList = appInfoMapper.getAppInfoByParam(appInfo, pages);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return appList;
+	}
+	
+	
+}

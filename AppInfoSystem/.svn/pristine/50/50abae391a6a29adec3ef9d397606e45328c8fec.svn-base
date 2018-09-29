@@ -1,0 +1,10 @@
+package cn.appsys.service.AppInfo;
+
+import java.util.List;
+
+import cn.appsys.pojo.AppInfo;
+import cn.appsys.tools.PageSupport;
+
+public interface AppInfoService {
+	public List<AppInfo> getAppInfoByParam(AppInfo appInfo,PageSupport pages);
+}

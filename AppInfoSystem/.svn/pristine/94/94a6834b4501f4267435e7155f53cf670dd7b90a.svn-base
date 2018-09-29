@@ -1,0 +1,19 @@
+package cn.appsys.dao.DataDictionary;
+
+import java.util.List;
+
+import cn.appsys.pojo.DataDictionary;
+
+public interface DataDictionaryMapper {
+	/**
+	 * 查询所有APP状态
+	 * @return
+	 */
+	public List<DataDictionary> getDataDictionaryByStatus();
+	
+	/**
+	 * 查询所属平台
+	 * @return
+	 */
+	public List<DataDictionary> getDataDictionaryByFlatform();
+}

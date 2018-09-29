@@ -1,0 +1,9 @@
+package cn.appsys.service.AppVersion;
+
+import java.util.List;
+
+import cn.appsys.pojo.AppVersion;
+
+public interface AppVersionService {
+	public List<AppVersion> getAppVersionList();
+}

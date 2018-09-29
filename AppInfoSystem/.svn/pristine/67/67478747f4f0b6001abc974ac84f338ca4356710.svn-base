@@ -1,0 +1,13 @@
+package cn.appsys.dao.AppVersion;
+
+import java.util.List;
+
+import cn.appsys.pojo.AppVersion;
+
+public interface AppVersionMapper {
+	/**
+	 * 查询所有版本信息
+	 * @return
+	 */
+	public List<AppVersion> getAppVersionList();
+}

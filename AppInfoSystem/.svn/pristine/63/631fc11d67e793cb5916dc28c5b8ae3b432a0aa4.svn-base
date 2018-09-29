@@ -1,0 +1,30 @@
+package cn.appsys.service.AppVersion;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.appsys.dao.AppVersion.AppVersionMapper;
+import cn.appsys.pojo.AppVersion;
+
+@Service
+public class AppVersionServiceImpl implements AppVersionService {
+
+	@Resource
+	private AppVersionMapper appVersionMapper;
+
+	@Override
+	public List<AppVersion> getAppVersionList() {
+		List<AppVersion> appList = null;
+		try {
+			appList = appVersionMapper.getAppVersionList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return appList;
+	}
+	
+	
+}

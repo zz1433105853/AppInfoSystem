@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.AppInfo.AppInfoMapper">
+	<select id="getAppInfoByParam" resultType="AppInfo">
+		select a.softwareName,a.APKName,a.softwareSize,(select d.valueName from data_dictionary d where d.valueId=a.`status` and d.typeCode = 'APP_FLATFORM' ) as flatformName,
+		(select d.valueName from data_dictionary d where d.valueId=a.`status` and d.typeCode='APP_STATUS' ) as statusName,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel1 ) as categoryLevel1Name,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel2) as categoryLevel2Name,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel3) as categoryLevel3Name,
+		a.downloads,(select v.versionNo from app_version v where v.id = a.versionid) as versionNo,
+		a.`status`,a.id,a.versionId from app_info a 
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="flatformId > 0 and flatformId != null">and a.flatformId = #{flatformId}</if>
+			<if test="status > 0 and status != null">and a.`status` = #{status}</if>
+			<if test="categoryLevel1 > 0 and categoryLevel1 != null">and a.categoryLevel1 = #{categoryLevel1}</if>
+			<if test="categoryLevel2 > 0 and categoryLevel2 != null">and a.categoryLevel2 = #{categoryLevel2}</if>
+			<if test="categoryLevel3 > 0 and categoryLevel3 != null">and a.categoryLevel3 = #{categoryLevel3}</if>
+			<if test="softwareName != null"> and a.softwareName like concat('%',#{softwareName},'%')</if>
+		</trim>
+		ORDER BY a.creationDate desc limit #{currentPageNo},#{pageSize}
+	</select>
+	
+	<select id="getAppInfoCount" resultType="int">
+		select count(1) as counts from app_info a
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="status > 0 and status != null">and a.`status` = #{status}</if>
+			<if test="flatformId > 0 and flatformId != null">and a.flatformId = #{flatformId}</if>
+			<if test="categoryLevel1 > 0 and categoryLevel1 != null">and a.categoryLevel1 = #{categoryLevel1}</if>
+			<if test="categoryLevel2 > 0 and categoryLevel2 != null">and a.categoryLevel2 = #{categoryLevel2}</if>
+			<if test="categoryLevel3 > 0 and categoryLevel3 != null">and a.categoryLevel3 = #{categoryLevel3}</if>
+			<if test="softwareName != null"> and a.softwareName like concat('%',#{softwareName},'%')</if>
+		</trim>
+	</select>
+	
+	<select id="getAppInfoByApk" resultType="AppInfo">
+		select * from App_Info where APKName = #{APKName}
+	</select>
+	
+	<insert id="addAppInfo">
+		insert into App_Info(softwareName,APKName,supportROM,interfaceLanguage,
+		softwareSize,downloads,flatformId,categoryLevel1,categoryLevel2,categoryLevel3,appInfo,
+		logoPicPath,logoLocPath,status,createdBy,creationDate) values(#{softwareName},#{APKName},#{supportROM},#{interfaceLanguage},
+		#{softwareSize},#{downloads},#{flatformId},#{categoryLevel1},#{categoryLevel2},#{categoryLevel3}
+		,#{appInfo},#{logoPicPath},#{logoLocPath},#{status},#{createdBy},#{creationDate})	
+	</insert>
+	
+	<select id="getAppInfoById" resultType="AppInfo">
+		select a.*,d.valueName as statusName from app_Info a,data_dictionary d 
+		where a.status = d.valueid and d.typeCode = 'APP_STATUS' and a.id = #{id}
+	</select>
+	
+	<update id="modify">
+		update app_info 
+		<set>
+			<if test="softwareName != null">softwareName=#{softwareName},</if>
+			<if test="supportROM != null">supportROM=#{supportROM},</if>
+			<if test="interfaceLanguage != null">interfaceLanguage=#{interfaceLanguage},</if>
+			<if test="softwareSize != null and softwareSize > 0">softwareSize=#{softwareSize},</if>
+			<if test="downloads != null and downloads > 0">downloads=#{downloads},</if>
+			<if test="flatformId != null and flatformId > 0">flatformId=#{flatformId},</if>
+			<if test="categoryLevel3 != null and categoryLevel3 > 0">categoryLevel3=#{categoryLevel3},</if>
+			<if test="categoryLevel2 != null and categoryLevel2 > 0">categoryLevel2=#{categoryLevel2},</if>
+			<if test="categoryLevel1 != null and categoryLevel1 > 0">categoryLevel1=#{categoryLevel1},</if>
+			<if test="appInfo != null">appInfo=#{appInfo},</if>
+			<if test="modifyBy != null and modifyBy > 0">modifyBy=#{modifyBy},</if>
+			<if test="logoPicPath != null">logoPicPath=#{logoPicPath},</if>
+			<if test="logoLocPath != null">logoLocPath=#{logoLocPath},</if>
+			<if test="updateDate != null">updateDate=#{updateDate},</if>
+			<if test="onSaleDate != null">onSaleDate=#{onSaleDate},</if>
+			<if test="offSaleDate != null">offSaleDate=#{offSaleDate},</if>
+			<if test="createdBy != null and createdBy > 0">createdBy=#{createdBy},</if>
+			<if test="creationDate != null">creationDate=#{creationDate},</if>
+			<if test="status != null and status > 0">status=#{status},</if>
+			<if test="modifyDate != null">modifyDate=#{modifyDate}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="modifyLogo">
+		update app_info set logoPicPath ='',logoLocPath='' where id = #{id}
+	</delete>
+	
+	<update id="modifyVersionId">
+		update app_info set versionId = #{versionId} where id = #{id}
+	</update>
+	
+	<select id="getAppInfoByIdInfo" resultType="AppInfo">
+		select a.*,(select d.valueName from data_dictionary d where d.valueId=a.`status` and d.typeCode = 'APP_FLATFORM' ) as flatformName,
+		(select d.valueName from data_dictionary d where d.valueId=a.`status` and d.typeCode='APP_STATUS' ) as statusName,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel1 ) as categoryLevel1Name,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel2) as categoryLevel2Name,
+		(select c.categoryName from app_category c where c.id = a.categoryLevel3) as categoryLevel3Name from app_info a where a.id = #{id}
+	</select>
+	
+	<delete id="deleteApp">
+		delete from app_info where id = #{id}
+	</delete>
+	
+	<update id="modifyStatus">
+		update app_info set status = #{status} where id = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.appsys.dao.AppVersion.AppVersionMapper">
+	<select id="getAppVersionList" resultType="AppVersion">
+		select * from app_version
+	</select>
+
+	<select id="getAppVersionById" resultType="AppVersion">
+		select v.*,i.softwareName as appName,d.valueName as publishStatusName from app_version v, app_info i,data_dictionary d
+		 where v.appid = i.id and v.publishStatus = d.valueId and d.typeCode = 'PUBLISH_STATUS'
+		 and appId = #{appId}
+	</select>
+	
+	<insert id="addAppVersion">
+		insert into app_version(versionNo,versionSize,versionInfo,downloadLink,publishStatus,createdBy,creationDate,appId,apkLocPath,apkFileName)
+		values(#{versionNo},#{versionSize},#{versionInfo},#{downloadLink},#{publishStatus},#{createdBy},#{creationDate},#{appId},#{apkLocPath},#{apkFileName})
+	</insert>
+	
+	<select id="getAppVersionId" resultType="int">
+		select @@identity
+	</select>
+	
+	<select id="appVersionInfo" resultType="AppVersion">
+		select * from app_version where id=#{id}
+	</select>
+	
+	<update id="modifyAppVersion">
+		update app_version
+		<set>
+			<if test="versionSize > 0 and versionSize != null">versionSize = #{versionSize},</if>
+			<if test="versionInfo != null">versionInfo = #{versionInfo},</if>
+			<if test="modifyBy != null and modifyBy > 0">modifyBy = #{modifyBy},</if>
+			<if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+			<if test="apkLocPath != null">apkLocPath = #{apkLocPath},</if>
+			<if test="appName != null">appName = #{appName},</if>
+			<if test="apkFileName != null">apkFileName = #{apkFileName},</if>
+			<if test="downloadLink != null">downloadLink = #{downloadLink}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="deleteImage">
+		update app_version set apkLocPath = #{apkLocPath},downloadLink=#{downloadLink},
+		apkFileName=#{apkFileName},modifyBy=#{modifyBy},
+		modifyDate=#{modifyDate} where id = #{id}
+	</update>
+	
+	<delete id="deleteInfo">
+		delete from app_version where appid = #{appId}
+	</delete>
+</mapper> 	

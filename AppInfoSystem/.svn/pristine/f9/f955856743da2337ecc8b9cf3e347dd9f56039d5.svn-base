@@ -1,0 +1,41 @@
+package cn.appsys.service.DataDictionary;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.appsys.dao.DataDictionary.DataDictionaryMapper;
+import cn.appsys.pojo.DataDictionary;
+
+@Service("dataDictionaryService")
+public class DataDictionaryServiceImpl implements DataDictionaryService {
+	
+	@Resource
+	private DataDictionaryMapper dataDictionaryMapper;
+
+	@Override
+	public List<DataDictionary> getDataDictionaryByStatus() {
+		List<DataDictionary> list = null;
+		try {
+			list = dataDictionaryMapper.getDataDictionaryByStatus();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public List<DataDictionary> getDataDictionaryByFlatform() {
+		List<DataDictionary> list = null;
+		try {
+			list = dataDictionaryMapper.getDataDictionaryByFlatform();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	
+}
